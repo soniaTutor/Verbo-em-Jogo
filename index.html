@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verbo em Jogo</title>
+<style>
+:root{--ybg:#fff0b3;--ytx:#6b4e00;--bg:#eef3fa;--card:#fff;--ink:#14213d;--mut:#55627f;--blue:#1b3fa0;--sun:#f2b705;--ok:#1f8a4c;--bad:#c62f2f;--line:#c9d5ea;--bi:#14213d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ybg:#5c4a0e;--ytx:#ffe08a;--bg:#0d1630;--card:#16224a;--ink:#eef2ff;--mut:#9fb0dc;--blue:#8aa8ff;--ok:#5fd08e;--bad:#ff7b7b;--line:#2b3b72;color-scheme:dark}}
+:root[data-theme="dark"]{--ybg:#5c4a0e;--ytx:#ffe08a;--bg:#0d1630;--card:#16224a;--ink:#eef2ff;--mut:#9fb0dc;--blue:#8aa8ff;--ok:#5fd08e;--bad:#ff7b7b;--line:#2b3b72;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 "Segoe UI",system-ui,-apple-system,sans-serif}
+.wrap{max-width:540px;margin:0 auto;padding:20px 16px 40px}
+h1,h3,#pr,.big{font-family:Georgia,"Times New Roman",serif}
+h1{font-size:2.3rem;line-height:1.1;margin:.3em 0 .2em;color:var(--blue)}
+.sub,.tip,small,.mut{color:var(--mut)}
+.h{display:none}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.seg button{flex:1 1 130px;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.seg .on{border-color:var(--blue);background:var(--blue);color:var(--bg);font-weight:700}
+.lvb{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0;color:var(--ink);font:inherit;cursor:pointer}
+.lvb:hover,.lvb:focus-visible{border-color:var(--blue);outline:none}
+.lvb b{display:block;font-size:1.1rem;color:var(--blue)}
+.hud{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:8px;gap:8px}
+#hp{color:var(--bad);letter-spacing:2px;font-size:1.2rem}
+.track{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+#bar{height:100%;width:100%;background:var(--sun)}
+.tile{background:var(--card);border:3px solid var(--blue);border-radius:6px;padding:22px 16px;margin:16px 0;text-align:center;box-shadow:inset 0 0 0 5px var(--card),inset 0 0 0 7px var(--blue),inset 0 0 0 10px var(--card),inset 0 0 0 11px var(--sun)}
+#tn{display:inline-block;background:var(--blue);color:var(--bg);border-radius:99px;padding:2px 14px;font-size:.9rem;font-weight:700}
+#pr{font-size:1.7rem;margin:14px 0 2px}
+#pr .b{color:var(--blue)}
+#pr small{font-size:1.1rem;font-style:italic}
+input{width:100%;font:inherit;font-size:20px;padding:12px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);text-align:center}
+input:focus{outline:none;border-color:var(--blue)}
+.ac{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.ac button{min-width:40px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+.btn{display:block;width:100%;background:var(--sun);color:var(--bi);border:0;border-radius:10px;padding:13px;font:inherit;font-weight:700;cursor:pointer;margin-top:10px}
+.btn.g{background:transparent;border:2px solid var(--line);color:var(--ink)}
+.btn:focus-visible,.ac button:focus-visible,.seg button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#fb{min-height:3.2em;margin-top:10px;font-weight:600;text-align:center}
+.ok{color:var(--ok)}.no{color:var(--bad)}
+.big{font-size:3rem;color:var(--blue);margin:.1em 0;text-align:center}
+.vt{background:var(--card);border:2px solid var(--line);border-radius:10px;padding:10px 12px;margin:12px 0}
+.vt h3{margin:0 0 6px;font-size:1.25rem;color:var(--blue)}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:4px 8px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:600;font-size:.78rem;white-space:normal}
+td.p{color:var(--mut)}
+td.m{color:var(--bad);font-weight:700;text-decoration:underline}
+td.y{background:var(--ybg);color:var(--ytx);font-weight:700}
+@media(prefers-reduced-motion:reduce){#bar{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<section id="s0">
+  <h1>Verbo em Jogo</h1>
+  <p class="sub">Study four verbs, answer against the clock, then review what you missed. Each round has 20 questions and three lives.</p>
+  <p class="mut" style="margin-bottom:0">Which forms do you want to practise? Whether a verb is regular or irregular depends on the tense (for example, ir is regular in the imperfeito).</p>
+  <div class="seg" id="grp">
+    <button data-g="r">Regular</button><button data-g="i">Irregular, by family</button><button data-g="t" class="on">All</button>
+  </div>
+  <div class="seg"><button id="vtg" aria-pressed="false">Include “vós”: no</button><button id="aud" class="on" aria-pressed="true">Audio: yes</button><button id="cum" aria-pressed="false">Verbs: this level only</button><button id="voz" aria-pressed="false">Auto voice: no</button></div>
+  <button class="lvb" data-l="A1"><b>A1</b><small>Presente (present) and imperativo (imperative)</small></button>
+  <button class="lvb" data-l="A2"><b>A2</b><small>Pretérito perfeito (simple past) and pretérito imperfeito (imperfect)</small></button>
+  <button class="lvb" data-l="B1"><b>B1</b><small>Futuro (future), condicional (conditional) and infinitivo pessoal (personal infinitive)</small></button>
+  <button class="lvb" data-l="B2"><b>B2</b><small>Subjunctive: presente, imperfeito and futuro do conjuntivo</small></button>
+  <p id="best" class="tip"></p>
+  <p class="tip">For accents, use the buttons below the answer box.</p>
+</section>
+
+<section id="s3" class="h">
+  <h1>Study first</h1>
+  <p class="sub">These are the verbs for this round. Memorise the forms, then start.</p>
+  <p class="tip" id="sn"></p>
+  <div id="ex"></div>
+  <div id="tb"></div>
+  <button class="btn" id="beg">I’ve studied, start</button>
+  <button class="btn g" id="back">Back to menu</button>
+</section>
+
+<section id="s1" class="h">
+  <button class="btn g" id="pz" style="width:auto;margin:0 0 8px auto;padding:6px 14px">⏸ Pause</button>
+  <div class="hud"><span id="hp"></span><span id="qn"></span><span id="st"></span><span>Score: <span id="sc">0</span></span></div>
+  <div class="track"><div id="bar"></div></div>
+  <div class="tile">
+    <span id="tn"></span>
+    <div id="pr" lang="pt-PT"></div>
+  </div>
+  <input id="in" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Verb form">
+  <div class="ac" id="ac"></div>
+  <button class="btn" id="go">Answer</button>
+  <button class="btn g" id="mic">🎤 Answer by voice</button>
+  <p class="tip" style="text-align:center;margin:4px 0">Tip: say the pronoun and the verb, e.g. “tu falas”. Short phrases are recognised better.</p>
+  <div id="heard" class="mut" style="text-align:center;min-height:1.4em"></div>
+  <div id="fb" aria-live="polite"></div>
+</section>
+
+<section id="s2" class="h">
+  <h1>Round over</h1>
+  <div class="big" id="fs"></div>
+  <p id="fd" class="mut" style="text-align:center"></p>
+  <button class="btn" id="same">Play again with the same verbs</button>
+  <button class="btn g" id="newv">New verbs at this level</button>
+  <button class="btn g" id="menu">Back to menu</button>
+  <div id="fe" style="margin-top:18px"></div>
+</section>
+
+<section id="s4" class="h">
+  <h1>Paused</h1>
+  <p class="sub">The clock is stopped. Take your time.</p>
+  <button class="btn" id="rs">Resume</button>
+  <button class="btn g" id="rv">Show the verb tables</button>
+  <button class="btn g" id="fn">End the round and see the review</button>
+  <button class="btn g" id="sx">Leave the round (back to menu)</button>
+  <div id="pt" style="margin-top:18px"></div>
+</section>
+
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const P=["eu","tu","ele/ela/você","nós","vós","eles/elas/vocês"],PI=["","tu","você","nós","vós","vocês"];
+const TL={pres:"Presente (present)",perf:"Pretérito perfeito (simple past)",imp:"Pretérito imperfeito (imperfect)",imv:"Imperativo (imperative)",fut:"Futuro (future)",cond:"Condicional (conditional)",inf:"Infinitivo pessoal (personal infinitive)",cpres:"Presente do conjuntivo (present subjunctive)",cimp:"Imperfeito do conjuntivo (imperfect subjunctive)",cfut:"Futuro do conjuntivo (future subjunctive)"};
+const TS={pres:"Presente",perf:"Pret. perfeito",imp:"Pret. imperfeito",imv:"Imperativo",fut:"Futuro",cond:"Condicional",inf:"Inf. pessoal",cpres:"Pres. conj.",cimp:"Imperf. conj.",cfut:"Fut. conj."};
+const PF={inf:"para",cpres:"que",cimp:"se",cfut:"quando"};
+const LV={A1:{t:["pres","imv"],s:15},A2:{t:["perf","imp"],s:15},B1:{t:["fut","cond","inf"],s:15},B2:{t:["cpres","cimp","cfut"],s:20}};
+const Q=20;
+const E={pres:{ar:"o as a amos ais am",er:"o es e emos eis em",ir:"o es e imos is em"},
+perf:{ar:"ei aste ou ámos astes aram",er:"i este eu emos estes eram",ir:"i iste iu imos istes iram"},
+imp:{ar:"ava avas ava ávamos áveis avam",er:"ia ias ia íamos íeis iam",ir:"ia ias ia íamos íeis iam"},
+cpres:{ar:"e es e emos eis em",er:"a as a amos ais am"},
+fut:"ei ás á emos eis ão",cond:"ia ias ia íamos íeis iam"};
+const I={
+ser:{pres:"sou és é somos sois são",perf:"fui foste foi fomos fostes foram",imp:"era eras era éramos éreis eram"},
+estar:{pres:"estou estás está estamos estais estão",perf:"estive estiveste esteve estivemos estivestes estiveram"},
+ter:{pres:"tenho tens tem temos tendes têm",perf:"tive tiveste teve tivemos tivestes tiveram",imp:"tinha tinhas tinha tínhamos tínheis tinham"},
+ir:{pres:"vou vais vai vamos ides vão",perf:"fui foste foi fomos fostes foram",imp:"ia ias ia íamos íeis iam"},
+fazer:{pres:"faço fazes faz fazemos fazeis fazem",perf:"fiz fizeste fez fizemos fizestes fizeram",fut:"farei farás fará faremos fareis farão",cond:"faria farias faria faríamos faríeis fariam"},
+dizer:{pres:"digo dizes diz dizemos dizeis dizem",perf:"disse disseste disse dissemos dissestes disseram",fut:"direi dirás dirá diremos direis dirão",cond:"diria dirias diria diríamos diríeis diriam"},
+poder:{pres:"posso podes pode podemos podeis podem",perf:"pude pudeste pôde pudemos pudestes puderam"},
+querer:{pres:"quero queres quer queremos quereis querem",perf:"quis quiseste quis quisemos quisestes quiseram"},
+ver:{pres:"vejo vês vê vemos vedes veem",perf:"vi viste viu vimos vistes viram",imp:"via vias via víamos víeis viam"},
+vir:{pres:"venho vens vem vimos vindes vêm",perf:"vim vieste veio viemos viestes vieram",imp:"vinha vinhas vinha vínhamos vínheis vinham"},
+dar:{pres:"dou dás dá damos dais dão",perf:"dei deste deu demos destes deram"},
+saber:{pres:"sei sabes sabe sabemos sabeis sabem",perf:"soube soubeste soube soubemos soubestes souberam"},
+trazer:{pres:"trago trazes traz trazemos trazeis trazem",perf:"trouxe trouxeste trouxe trouxemos trouxestes trouxeram",fut:"trarei trarás trará traremos trareis trarão",cond:"traria trarias traria traríamos traríeis trariam"},
+haver:{pres:"hei hás há havemos haveis hão",perf:"houve houveste houve houvemos houvestes houveram"},
+ler:{pres:"leio lês lê lemos ledes leem",perf:"li leste leu lemos lestes leram",imp:"lia lias lia líamos líeis liam"}};
+const CS={ser:"sej",estar:"estej",ter:"tenh",fazer:"faç",dizer:"dig",poder:"poss",querer:"queir",ver:"vej",vir:"venh",saber:"saib",trazer:"trag",haver:"haj",ler:"lei",ouvir:"ouç",dormir:"durm",preferir:"prefir",sentir:"sint",vestir:"vist",sugerir:"sugir",referir:"refir",refletir:"reflit",concluir:"conclu",contribuir:"contribu",diminuir:"diminu",propor:"proponh",pressupor:"pressuponh",manter:"mantenh",prevenir:"previn"};
+const CI={ir:"vá vás vá vamos vades vão",dar:"dê dês dê demos deis deem"};
+const TU={ser:"sê",estar:"está",ter:"tem",ir:"vai",fazer:"faz",dizer:"diz",ver:"vê",vir:"vem",dar:"dá",saber:"sabe",trazer:"traz",propor:"propõe",pressupor:"pressupõe",manter:"mantém",ler:"lê"};
+const REGER=["comer","beber","escrever","viver"],NOIMP=["poder","querer","haver","acontecer"];
+const RV=["falar","trabalhar","cantar","estudar","comer","beber","escrever","partir","abrir","viver"],IV=Object.keys(I);
+
+function get(v,t){
+  if(v.endsWith("-se")){const b=v.slice(0,-3);return get(b,t).map((x,i)=>x&&cl(x,t,i,b))}
+  const u=UIR.includes(v)&&uir(v,t);if(u)return u;
+  const o=I[v]&&I[v][t];if(o)return o.split(" ");
+  const k=v.slice(-2),s=v.slice(0,-2),sp=x=>x.split(" ");
+  if(t=="fut"||t=="cond")return sp(E[t]).map(e=>v+e);
+  if(t=="inf")return ["","es","","mos","des","em"].map(e=>v+e);
+  if(t=="cpres"){if(CI[v])return sp(CI[v]);return sp(E.cpres[CS[v]||k!="ar"?"er":"ar"]).map(e=>CS[v]?CS[v]+e:jn(s,e,k))}
+  if(t=="cimp"||t=="cfut"){
+    const b=get(v,"perf")[5].slice(0,-3);
+    if(t=="cfut")return ["r","res","r","rmos","rdes","rem"].map(e=>b+e);
+    const a=b.slice(0,-1)+({a:"á",e:k=="er"&&!I[v]?"ê":"é",i:"í",o:"ô"})[b.slice(-1)];
+    return [b+"sse",b+"sses",b+"sse",a+"ssemos",a+"sseis",b+"ssem"];
+  }
+  if(t=="imv"){
+    if(NOIMP.includes(v))return [null,null,null,null,null,null];
+    const c=get(v,"cpres"),p=get(v,"pres");
+    return [null,TU[v]||p[2],c[2],c[3],v=="ser"?"sede":p[4].slice(0,-1),c[5]];
+  }
+  {const r=sp(E[t][k]).map(e=>jn(s,e,k));if(t=="pres"){if(P1[v])r[0]=P1[v];if(UZ.includes(v))r[2]=s}return r}
+}
+const sp=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const bar=$("#bar"),inp=$("#in");
+let G="t",V=false,cnt,ev,F,sn,rq,ax,vt,lk,cfg,vs,pool,lives,score,streak,asked,right,miss,cur,locked,tm,dl,last;
+
+function gb(l){try{return +localStorage.getItem("vj-best"+l)||0}catch(e){return 0}}
+function sb(l,n){try{localStorage.setItem("vj-best"+l,n)}catch(e){}}
+function gm(l){try{return JSON.parse(localStorage.getItem("vj-ok"+l))||[]}catch(e){return []}}
+function sm(l,a){try{localStorage.setItem("vj-ok"+l,JSON.stringify(a))}catch(e){}}
+function gf(l){try{return JSON.parse(localStorage.getItem("vj-f"+l))||{}}catch(e){return {}}}
+function sf(l,o){try{localStorage.setItem("vj-f"+l,JSON.stringify(o))}catch(e){}}
+const FAM=[["ser","ir","estar","ter"],["fazer","dizer","trazer","poder","querer"],["ver","vir","dar","saber"],["haver","ler","ouvir","dormir"],["pressupor","propor","manter","contribuir","diminuir"]];
+const FN=["Família 1: ser e ir têm formas iguais no pretérito perfeito (fui, foste, foi…) e estar e ter seguem o mesmo molde (estive/tive, esteve/teve, estiveram/tiveram).","Família 2: radical irregular no pretérito perfeito (fiz, disse, trouxe, pude, quis) e na 1.ª pessoa do presente (faço, digo, trago, posso, quero). No futuro e no condicional, fazer, dizer e trazer são irregulares (farei, direi, trarei).","Família 3: formas curtas e com acento (vê, vem, dá; veem, vêm, dão). Ver e vir rimam (vemos/vimos, via/vinha)."];
+const FT=[["perf"],["perf","pres","fut","cond"],["pres"]];
+const VL={A1:"ser estar ter haver ir vir fazer dizer falar morar viver chamar-se gostar querer poder saber comer beber dormir trabalhar estudar ler escrever ouvir ver comprar precisar abrir fechar chegar".split(" "),
+A2:"conhecer encontrar procurar esperar pensar achar acreditar aprender ensinar explicar escolher preferir sentir sentar-se levantar-se vestir viajar conduzir ajudar esquecer lembrar-se começar acabar continuar acontecer".split(" "),
+B1:"afirmar declarar defender concordar discordar discutir descrever contar relatar referir sugerir recomendar aconselhar prometer propor considerar imaginar refletir perceber compreender reconhecer concluir decidir resolver avaliar comparar analisar".split(" "),
+B2:"argumentar justificar fundamentar demonstrar comprovar evidenciar salientar destacar questionar contestar refutar pressupor implicar condicionar influenciar contribuir promover desenvolver implementar aperfeiçoar aumentar diminuir reduzir melhorar agravar transformar adaptar estabelecer manter garantir assegurar evitar prevenir enfrentar ultrapassar apoiar provocar originar resultar alterar distinguir diferenciar relacionar".split(" ")};
+let CUM=false;
+const EXE={pres:"Used for actions happening now, habits and general facts. Ex.: Eu estudo português todos os dias. (I study Portuguese every day.)",imv:"Used to give orders, instructions and advice, and to make requests. Only the affirmative form is practised here. Ex.: Fala mais devagar, por favor. (Speak more slowly, please.)",perf:"Used for actions that are finished in the past. Ex.: Ontem comi peixe ao almoço. (Yesterday I ate fish for lunch.)",imp:"Used for past habits, descriptions, and actions in progress when something else happened. Ex.: Quando era criança, brincava na rua. (When I was a child, I used to play in the street.)",fut:"Used for what will happen later and for predictions. Ex.: Amanhã chegarei cedo. (Tomorrow I will arrive early.)",cond:"Used for hypotheses, polite requests and suggestions. Ex.: Gostaria de um café. (I would like a coffee.)",inf:"The infinitive with a person ending. Used when the subject differs from the main clause, or to stress who does the action. Ex.: É importante estudarmos todos os dias. (It is important that we study every day.)",cpres:"Expresses wishes, doubt, opinion or commands, usually after “que”. Ex.: Espero que tu venhas à festa. (I hope you come to the party.)",cimp:"Expresses unlikely or unreal hypotheses and wishes about the past. Ex.: Se eu tivesse tempo, viajava mais. (If I had time, I would travel more.)",cfut:"Refers to possible future actions, after “quando”, “se” or “enquanto”. Ex.: Quando chegares, telefona-me. (When you arrive, call me.)"};
+const FN_EN=["Family 1: ser and ir have identical forms in the pretérito perfeito (fui, foste, foi…), and estar and ter follow the same mould (estive/tive, esteve/teve, estiveram/tiveram).","Family 2: irregular stem in the pretérito perfeito (fiz, disse, trouxe, pude, quis) and in the 1st person of the present (faço, digo, trago, posso, quero). In the future and conditional, fazer, dizer and trazer are irregular (farei, direi, trarei).","Family 3: short forms with accents (vê, vem, dá; veem, vêm, dão). Ver and vir rhyme (vemos/vimos, via/vinha)."];
+const LVP=l=>{const ks=Object.keys(VL),b=CUM?ks.slice(0,ks.indexOf(l)+1).flatMap(k=>VL[k]):VL[l].concat(VL.A1.filter(v=>LV.A1.t.some(t=>irr(v,t))));return b.filter((v,i)=>b.indexOf(v)==i)};
+const EX={pres:"Fala de ações que acontecem agora, de hábitos e de factos gerais. Ex.: Eu estudo português todos os dias.",imv:"Serve para dar ordens, instruções e conselhos e para fazer pedidos. Aqui é só o afirmativo. Ex.: Fala mais devagar, por favor.",perf:"Fala de ações terminadas no passado. Ex.: Ontem comi peixe ao almoço.",imp:"Descreve hábitos e situações do passado, ou ações em curso quando outra aconteceu. Ex.: Quando era criança, brincava na rua.",fut:"Fala do que vai acontecer mais tarde e faz previsões. Ex.: Amanhã chegarei cedo.",cond:"Usa-se para hipóteses, pedidos educados e sugestões. Ex.: Gostaria de um café.",inf:"É o infinitivo com pessoa. Usa-se quando o sujeito é diferente ou para realçar quem faz a ação. Ex.: É importante estudarmos todos os dias.",cpres:"Exprime desejo, dúvida, opinião ou ordem, normalmente depois de «que». Ex.: Espero que tu venhas à festa.",cimp:"Exprime hipóteses pouco prováveis ou irreais e desejos no passado. Ex.: Se eu tivesse tempo, viajava mais.",cfut:"Fala de ações futuras possíveis, depois de «quando», «se» ou «enquanto». Ex.: Quando chegares, telefona-me."};
+const IMS={haver:[2],acontecer:[2,5]};
+const P1={dormir:"durmo",preferir:"prefiro",sentir:"sinto",vestir:"visto",sugerir:"sugiro",referir:"refiro",refletir:"reflito",ouvir:"ouço"};
+const UZ=["conduzir","reduzir"],UIR=["concluir","contribuir","diminuir"];
+Object.keys(P1).concat(UZ,UIR).forEach(v=>{I[v]=I[v]||{}});
+const pos=q=>({pres:[q+"onho",q+"ões",q+"õe",q+"omos",q+"ondes",q+"õem"].join(" "),perf:[q+"us",q+"useste",q+"ôs",q+"usemos",q+"usestes",q+"useram"].join(" "),imp:[q+"unha",q+"unhas",q+"unha",q+"únhamos",q+"únheis",q+"unham"].join(" ")});
+const mnt=q=>({pres:[q+"tenho",q+"téns",q+"tém",q+"temos",q+"tendes",q+"têm"].join(" "),perf:[q+"tive",q+"tiveste",q+"teve",q+"tivemos",q+"tivestes",q+"tiveram"].join(" "),imp:[q+"tinha",q+"tinhas",q+"tinha",q+"tínhamos",q+"tínheis",q+"tinham"].join(" ")});
+I.propor=pos("prop");I.pressupor=pos("pressup");I.manter=mnt("man");I.prevenir={pres:"previno prevines previne prevenimos prevenis previnem"};
+const CL=["me","te","se","nos","vos","se"];
+function cl(x,t,i,b){const c=CL[i];if(t=="fut"||t=="cond")return b+"-"+c+"-"+x.slice(b.length);if(t=="cpres"||t=="cimp"||t=="cfut")return c+" "+x;return (i==3?x.slice(0,-1):x)+"-"+c}
+function jn(s,e,k){
+  if(k=="ar"&&/^[eéê]/.test(e)){if(s.endsWith("ç"))return s.slice(0,-1)+"c"+e;if(s.endsWith("c"))return s.slice(0,-1)+"qu"+e;if(s.endsWith("g"))return s+"u"+e}
+  if(k!="ar"&&/^[ao]/.test(e)){if(s.endsWith("c"))return s.slice(0,-1)+"ç"+e;if(s.endsWith("gu"))return s.slice(0,-1)+e;if(s.endsWith("g"))return s.slice(0,-1)+"j"+e}
+  return s+e}
+function uir(v,t){const s=v.slice(0,-2),n=[v,s+"íres",v,s+"irmos",s+"irdes",s+"írem"];return ({pres:[s+"o",s+"is",s+"i",s+"ímos",s+"ís",s+"em"],perf:[s+"í",s+"íste",s+"iu",s+"ímos",s+"ístes",s+"íram"],imp:[s+"ía",s+"ías",s+"ía",s+"íamos",s+"íeis",s+"íam"],inf:n,cfut:n,cimp:[s+"ísse",s+"ísses",s+"ísse",s+"íssemos",s+"ísseis",s+"íssem"]})[t]||null}
+function rg(v,t){const k=v.slice(-2)=="or"?"er":v.slice(-2),s=v.slice(0,-2),sp=x=>x.split(" ");
+  if(t=="fut"||t=="cond")return sp(E[t]).map(e=>v+e);
+  if(t=="inf")return ["","es","","mos","des","em"].map(e=>v+e);
+  if(t=="cpres")return sp(E.cpres[k=="ar"?"ar":"er"]).map(e=>jn(s,e,k));
+  if(t=="cimp"||t=="cfut"){const b=rg(v,"perf")[5].slice(0,-3);if(t=="cfut")return ["r","res","r","rmos","rdes","rem"].map(e=>b+e);const a=b.slice(0,-1)+({a:"á",e:k=="er"?"ê":"é",i:"í",o:"ô"})[b.slice(-1)];return [b+"sse",b+"sses",b+"sse",a+"ssemos",a+"sseis",b+"ssem"]}
+  if(t=="imv"){const c=rg(v,"cpres"),p=rg(v,"pres");return [null,p[2],c[2],c[3],p[4].slice(0,-1),c[5]]}
+  return sp(E[t][k]).map(e=>jn(s,e,k))}
+const irr=(v,t)=>{const b=v.endsWith("-se")?v.slice(0,-3):v;return get(b,t).some((a,i)=>a&&sp(a)!==sp(rg(b,t)[i]))};
+const ing=(v,t)=>G=="i"?irr(v,t):G=="r"?!irr(v,t):true;
+const kf=x=>x.v+"|"+x.t+"|"+x.i;
+const forms=(v,t)=>get(v,t).map((a,i)=>a&&(V||i!=4)?i:-1).filter(i=>i>=0);
+const vdone=(v,l,f)=>LV[l].t.filter(t=>ing(v,t)).every(t=>forms(v,t).every(i=>(f[v+"|"+t+"|"+i]||0)>=2));
+function cand(vv){let a=pool.filter(x=>x.v==vv);if(I[vv]){const n=a.filter(x=>(F[kf(x)]||0)<2),u=n.filter(x=>!sn[kf(x)]);a=u.length?u:n.length?n:a}return a}
+function show(id){["s0","s1","s2","s3","s4"].forEach(x=>$("#"+x).classList.toggle("h",x!=id))}
+function menu(){voiceStop();
+  $("#best").textContent="Records: "+["A1","A2","B1","B2"].map(l=>l+" "+gb(l)).join("  |  ");
+  show("s0");
+}
+function tbl(ts,m){
+  return vs.map(v=>{
+    const tt=vt[v]||ts,cols=tt.map(t=>get(v,t));
+    return '<div class="vt" lang="pt-PT"><h3>'+v+'</h3><div class="sc"><table><thead><tr><th></th>'+tt.map(t=>"<th>"+TS[t]+"</th>").join("")+"</tr></thead><tbody>"+
+      P.map((p,i)=>(i==4&&!V)?"":"<tr><td class='p'>"+p+"</td>"+cols.map((c,j)=>"<td"+(m&&m[v+"|"+tt[j]+"|"+i]?" class='m'":m&&ax[v+"|"+tt[j]+"|"+i]?" class='y'":"")+">"+(c[i]||"–")+"</td>").join("")+"</tr>").join("")+"</tbody></table></div></div>";
+  }).join("");
+}
+function study(l){
+  lk=l;cfg=LV[l];
+  const all=LVP(l).filter(v=>LV[l].t.some(t=>ing(v,t))),mm=gm(l);
+  if(!all.length){$("#best").textContent="At this level there are no "+(G=="i"?"irregular":"regular")+" forms in the chosen verbs. Try “All” or the cumulative verb lists.";show("s0");return}F=gf(l);let nt="",fi=-1,dn=v=>I[v]?vdone(v,l,F):mm.includes(v),src=all.filter(v=>!dn(v));
+  if(!src.length){src=all;sm(l,mm.filter(v=>!all.includes(v)));all.forEach(v=>{if(I[v])LV[l].t.forEach(t=>get(v,t).forEach((a,i)=>delete F[v+"|"+t+"|"+i]))});sf(l,F);dn=v=>false;nt="You have mastered every verb in this group, so the list has started again. "}
+  let fm=null;if(G=="i"){const fs=FAM.map(f=>f.filter(v=>src.includes(v))).filter(a=>a.length),rs=src.filter(v=>!FAM.flat().includes(v));for(let i=0;i<rs.length;i+=4)fs.push(rs.slice(i,i+4));fm=fs[0];fi=FAM.findIndex(f=>f.some(v=>fm.includes(v)));if(fi>=0&&FT[fi]&&FT[fi].some(t=>cfg.t.includes(t)))nt+=FN_EN[fi]+" "}
+  vs=(G=="i"?fm:src.slice().sort(()=>Math.random()-.5)).slice(0,4);vt={};vs.forEach(v=>vt[v]=cfg.t.filter(t=>ing(v,t)));
+  $("#sn").textContent=nt+"Verbs already mastered in this group: "+all.filter(dn).length+" of "+all.length+".";$("#ex").innerHTML="<div class='vt'><h3>What each tense is for</h3>"+cfg.t.map(t=>"<p style='margin:6px 0'><b>"+TL[t]+".</b> "+EXE[t]+"</p>").join("")+"</div>";$("#tb").innerHTML=tbl(cfg.t);
+  show("s3");window.scrollTo(0,0);
+}
+function begin(){
+  pool=[];
+  vs.forEach(v=>vt[v].forEach(t=>get(v,t).forEach((a,i)=>{if(a&&(V||i!=4)&&(!IMS[v]||IMS[v].includes(i)))pool.push({v,t,i,a})})));
+  lives=3;score=0;streak=0;asked=0;right=0;miss={};last="";cnt={};ev={};sn={};ax={};F=gf(lk);rq=pool.filter(x=>F[kf(x)]===-1).slice(0,4).map(c=>({c,d:0}));
+  paused=false;pend=false;clearTimeout(advT);show("s1");hud();next();if(AV&&SR)voiceStart();
+}
+function hud(){
+  $("#hp").textContent="♥".repeat(lives)+"♡".repeat(3-lives);
+  $("#sc").textContent=score;
+  $("#st").textContent=streak>1?"Streak "+streak:"";
+}
+function next(){
+  let c;
+  const ri=rq.findIndex(x=>x.d<=asked),m=Math.min(...vs.map(v=>cnt[v]||0)),vv=rnd(vs.filter(v=>(cnt[v]||0)==m)),pv=cand(vv);
+  if(ri>=0)c=rq.splice(ri,1)[0].c;else do{c=rnd(pv)}while(pv.length>1&&c.v+c.t+c.i==last);
+  cnt[c.v]=(cnt[c.v]||0)+1;
+  last=c.v+c.t+c.i;cur=c;locked=false;
+  $("#qn").textContent=(asked+1)+"/"+Q;
+  $("#tn").textContent=TL[c.t];
+  const lab=c.t=="imv"?PI[c.i]:P[c.i];
+  $("#pr").innerHTML=(PF[c.t]?PF[c.t]+" ":"")+lab+' <span class="b">_____</span> <small>('+c.v+')</small>';
+  $("#fb").textContent="";$("#fb").className="";
+  inp.value="";inp.disabled=false;inp.focus();
+  bar.style.transition="none";bar.style.width="100%";void bar.offsetWidth;
+  bar.style.transition="width "+cfg.s+"s linear";bar.style.width="0%";
+  dl=Date.now()+cfg.s*1000;
+  clearTimeout(tm);tm=setTimeout(()=>fin(null),cfg.s*1000);if(AV&&SR)setTimeout(am,700);
+}
+function fin(a,alts){
+  if(locked)return;locked=true;clearTimeout(tm);
+  const w=getComputedStyle(bar).width;bar.style.transition="none";bar.style.width=w;
+  inp.disabled=true;asked++;
+  const c=cur.a,g=a===null?"":a.trim().toLowerCase();
+  let msg,ok=false;
+  if(g==c){ok=true;msg="Correct!"}else if(alts&&alts.some(x=>vn(x)==vn(c))){ok=true;ax[kf(cur)]=1;msg="Correct!"}
+  else if(g&&sp(g)==sp(c)&&!cfg.t.some(t=>get(cur.v,t).includes(g))){ok=true;ax[kf(cur)]=1;msg="Correct!"}
+  if(ok){
+    right++;streak++;say(cur.a);const kk=kf(cur);if(I[cur.v]&&!cur.r&&!sn[kk])F[kk]=Math.max(0,F[kk]||0)+1;
+    const rem=Math.max(0,(dl-Date.now())/1000);
+    score+=10+Math.round(rem)+Math.min(streak,5)*2;
+    if(streak%5==0)msg+=" "+streak+" in a row!";
+  }else{
+    lives--;streak=0;miss[cur.v+"|"+cur.t+"|"+cur.i]=1;ev[cur.v]=1;if(I[cur.v]&&!cur.r)F[kf(cur)]=-1;if(!cur.r)rq.push({c:{v:cur.v,t:cur.t,i:cur.i,a:cur.a,r:1},d:asked+3});
+    msg=(a===null?"Time’s up. ":"Not quite. ")+"It was <b>"+c+"</b>"+(alts?"<br><small>The speech recogniser heard: “"+String(a).replace(/</g,"&lt;")+"”.</small>":"");
+  }
+  if(cur.t=="perf"&&cur.i==3&&cur.v.endsWith("ar")&&!I[cur.v])
+    msg+="<br><small>In European Portuguese, the pretérito takes an accent (falámos) and the present does not (falamos).</small>";
+  $("#fb").innerHTML=msg;$("#fb").className=ok?"ok":"no";sn[kf(cur)]=1;sf(lk,F);
+  hud();
+  advT=setTimeout(adv,ok?1000:2200);
+}
+function end(){
+  const best=Math.max(gb(lk),score);sb(lk,best);const nm=vs.filter(v=>I[v]?vdone(v,lk,F):(cnt[v]||0)>=3&&!ev[v]);if(nm.length){const mm=gm(lk);nm.forEach(v=>{if(!mm.includes(v))mm.push(v)});sm(lk,mm)}
+  $("#fs").textContent=score+" points";
+  const acc=asked?Math.round(right/asked*100):0,n=Object.keys(miss).length;
+  $("#fd").textContent=right+" of "+asked+" correct ("+acc+"%). "+(score>=best&&score>0?"New record!":"Level record: "+best+".")+(nm.length?" Verbs mastered this round: "+nm.join(", ")+".":"");
+  $("#fe").innerHTML="<p><b>Review the verbs</b>"+(n?". Underlined in red: the forms you missed":"")+(Object.keys(ax).length?(n?"; in yellow: the ones you got right without the accent":". In yellow: the forms you got right without the accent"):"")+".</p>"+tbl(cfg.t,miss);
+  voiceStop();show("s2");window.scrollTo(0,0);
+}
+document.querySelectorAll("#grp button").forEach(b=>b.onclick=()=>{
+  G=b.dataset.g;document.querySelectorAll("#grp button").forEach(x=>x.classList.toggle("on",x==b));
+});
+document.querySelectorAll(".lvb").forEach(b=>b.onclick=()=>study(b.dataset.l));
+$("#beg").onclick=begin;$("#same").onclick=begin;
+$("#vtg").onclick=e=>{V=!V;e.target.classList.toggle("on",V);e.target.setAttribute("aria-pressed",V);e.target.textContent="Include “vós”: "+(V?"yes":"no")};
+$("#back").onclick=menu;$("#menu").onclick=menu;$("#newv").onclick=()=>study(lk);
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null,AV=false;
+const vp=s=>s.toLowerCase().trim().replace(/^((que|se|quando|para)\s+)?(eu|tu|ele|ela|você|nós|vós|eles|elas|vocês)\s+/,""),vn=s=>sp(vp(s)).replace(/[\s-]/g,"");
+function mic(){
+  if(!SR||locked||inp.disabled)return;
+  if(document.featurePolicy&&!document.featurePolicy.allowsFeature("microphone")){$("#fb").textContent="A página que contém o jogo não permite o microfone. Para usar a voz, abre o ficheiro do jogo fora do Claude. Também podes escrever a resposta.";return}
+  try{if(rec)rec.abort()}catch(e){}
+  const b=$("#mic");rec=new SR();rec.lang="pt-PT";rec.maxAlternatives=5;rec.interimResults=false;
+  b.textContent="A ouvir… fala agora";
+  rec.onresult=e=>{const al=Array.from(e.results[0]).map(x=>x.transcript);inp.value=al[0];fin(al[0],al)};
+  rec.onerror=e=>{const M={"not-allowed":"O microfone foi bloqueado (permissão negada ou bloqueio da página que contém o jogo).","service-not-allowed":"O navegador não permite o serviço de voz nesta página.","audio-capture":"Não foi encontrado nenhum microfone.","network":"Sem ligação ao serviço de reconhecimento de voz.","no-speech":"Não ouvi nada. Tenta outra vez.","language-not-supported":"Este navegador não reconhece português de Portugal."};if(e.error!="aborted")$("#fb").textContent=(M[e.error]||"Erro de voz: "+e.error)+" Também podes escrever a resposta."};
+  rec.onend=()=>{b.textContent="🎤 Responder por voz"};
+  try{rec.start()}catch(e){}
+}
+function am(){if(locked)return;if(window.speechSynthesis&&speechSynthesis.speaking)setTimeout(am,300);else mic()}
+$("#mic").onclick=mic;
+$("#voz").onclick=e=>{AV=!AV;e.target.classList.toggle("on",AV);e.target.setAttribute("aria-pressed",AV);e.target.textContent="Auto voice: "+(AV?"yes":"no")};
+if(!SR){$("#mic").style.display="none";const vz=$("#voz");vz.disabled=true;vz.textContent="Voice not available in this browser"}
+$("#cum").onclick=e=>{CUM=!CUM;e.target.classList.toggle("on",CUM);e.target.setAttribute("aria-pressed",CUM);e.target.textContent="Verbs: "+(CUM?"cumulative":"this level only")};
+let AU=true,VO=null;
+function pv(){const a=window.speechSynthesis?speechSynthesis.getVoices():[];VO=a.find(x=>x.lang.replace("_","-")=="pt-PT")||null;const b=$("#aud");b.classList.toggle("on",AU&&!!VO);b.setAttribute("aria-pressed",AU&&!!VO);b.textContent=VO?"Audio: "+(AU?"yes":"no"):"Audio unavailable (no pt-PT voice)"}
+function say(t){if(!AU||!VO)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.voice=VO;u.lang="pt-PT";u.rate=.9;quietUntil=Date.now()+3000;u.onend=()=>{quietUntil=Date.now()+800};speechSynthesis.speak(u)}catch(e){}}
+$("#aud").onclick=()=>{if(!VO)return;AU=!AU;pv()};
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=pv;
+pv();
+let paused=false,pend=false,vOn=false,remMs=0,wasV=false,advT=0,quietUntil=0;
+function setMicBtn(on){$("#mic").textContent=on?"🎤 Listening… tap to stop":"🎤 Answer by voice"}
+function adv(){if(paused){pend=true;return}(lives<=0||asked>=Q)?end():next()}
+function voiceStart(){
+  if(!SR||vOn)return;
+  if(document.featurePolicy&&!document.featurePolicy.allowsFeature("microphone")){$("#fb").textContent="The page that holds the game does not allow the microphone. To use voice, open the game file outside Claude. You can also type the answer.";return}
+  rec=new SR();rec.lang="pt-PT";rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=8;
+  rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i],al=Array.from(r).map(x=>x.transcript);$("#heard").textContent="Heard: "+al[0];
+    if(r.isFinal&&!locked&&!paused&&Date.now()>quietUntil&&!(window.speechSynthesis&&speechSynthesis.speaking)){inp.value=al[0];fin(al[0],al)}}};
+  rec.onerror=e=>{const M={"not-allowed":"The microphone was blocked (permission denied, or blocked by the page that holds the game).","service-not-allowed":"The browser does not allow the speech service on this page.","audio-capture":"No microphone was found.","network":"No connection to the speech-recognition service.","language-not-supported":"This browser does not recognise European Portuguese."};
+    if(M[e.error]){$("#fb").textContent=M[e.error]+" You can also type the answer.";vOn=false}};
+  rec.onend=()=>{if(vOn&&!paused&&!$("#s1").classList.contains("h")){try{rec.start()}catch(x){vOn=false;setMicBtn(false)}}else setMicBtn(false)};
+  try{rec.start();vOn=true;setMicBtn(true)}catch(x){}
+}
+function voiceStop(){vOn=false;try{if(rec)rec.abort()}catch(e){}setMicBtn(false);$("#heard").textContent=""}
+function am(){}
+$("#mic").onclick=()=>vOn?voiceStop():voiceStart();
+function pause(){
+  if(paused)return;paused=true;wasV=vOn;voiceStop();
+  if(!locked){clearTimeout(tm);remMs=Math.max(500,dl-Date.now());const w=getComputedStyle(bar).width;bar.style.transition="none";bar.style.width=w}
+  $("#pt").innerHTML="";show("s4");window.scrollTo(0,0);
+}
+function resume(){
+  if(!paused)return;paused=false;show("s1");
+  if(pend){pend=false;adv()}
+  else if(!locked){inp.focus();void bar.offsetWidth;bar.style.transition="width "+remMs/1000+"s linear";bar.style.width="0%";dl=Date.now()+remMs;tm=setTimeout(()=>fin(null),remMs)}
+  if(wasV)voiceStart();
+}
+$("#pz").onclick=pause;$("#rs").onclick=resume;
+$("#rv").onclick=()=>{$("#pt").innerHTML=tbl(cfg.t)};
+$("#fn").onclick=()=>{paused=false;pend=false;clearTimeout(tm);clearTimeout(advT);end()};
+$("#sx").onclick=()=>{paused=false;pend=false;clearTimeout(tm);clearTimeout(advT);menu()};
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&!$("#s1").classList.contains("h"))pause()});
+$("#go").onclick=()=>fin(inp.value);
+inp.addEventListener("keydown",e=>{if(e.key=="Enter")fin(inp.value)});
+"á à â ã é ê í ó ô õ ú ç".split(" ").forEach(c=>{
+  const b=document.createElement("button");b.textContent=c;b.type="button";
+  b.addEventListener("mousedown",e=>e.preventDefault());
+  b.onclick=()=>{if(inp.disabled)return;const s=inp.selectionStart,e=inp.selectionEnd;inp.value=inp.value.slice(0,s)+c+inp.value.slice(e);inp.focus();inp.setSelectionRange(s+1,s+1)};
+  $("#ac").appendChild(b);
+});
+menu();
+</script>
+</body>
+</html>
