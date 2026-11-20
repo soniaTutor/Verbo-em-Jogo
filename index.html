@@ -282,7 +282,7 @@ function fin(a,alts){
   inp.disabled=true;asked++;
   const c=cur.a,g=a===null?"":a.trim().toLowerCase();
   let msg,ok=false;
-  if(g==c){ok=true;msg="Correct!"}else if(alts&&alts.some(x=>vn(x)==vn(c))){ok=true;ax[kf(cur)]=1;msg="Correct!"}
+  if(g==c){ok=true;msg="Correct!"}else if(alts&&(alts.some(x=>vn(x)==vn(c))||fz(alts[0],c))){ok=true;msg="Correct!"+(SH&&vn(alts[0])!=vn(c)?"<br><small>The recogniser wrote “"+String(alts[0]).replace(/</g,"&lt;")+"”, but the sound matched.</small>":"")}
   else if(g&&sp(g)==sp(c)&&!cfg.t.some(t=>get(cur.v,t).includes(g))){ok=true;ax[kf(cur)]=1;msg="Correct!"}
   if(ok){
     right++;streak++;say(cur.a);const kk=kf(cur);if(I[cur.v]&&!cur.r&&!sn[kk])F[kk]=Math.max(0,F[kk]||0)+1;
@@ -291,7 +291,7 @@ function fin(a,alts){
     if(streak%5==0)msg+=" "+streak+" in a row!";
   }else{
     lives--;streak=0;miss[cur.v+"|"+cur.t+"|"+cur.i]=1;ev[cur.v]=1;if(I[cur.v]&&!cur.r)F[kf(cur)]=-1;if(!cur.r)rq.push({c:{v:cur.v,t:cur.t,i:cur.i,a:cur.a,r:1},d:asked+3});
-    msg=(a===null?"Time’s up. ":"Not quite. ")+"It was <b>"+c+"</b>"+(alts?"<br><small>The speech recogniser heard: “"+String(a).replace(/</g,"&lt;")+"”.</small>":"");
+    msg=(a===null?"Time’s up. ":"Not quite. ")+"It was <b>"+c+"</b>"+(alts?(SH?"<br><small>The speech recogniser heard: “"+String(a).replace(/</g,"&lt;")+"”.</small>":"<br><small>Voice recognition is not perfect: if you said it correctly, the microphone may have misheard you.</small>"):"");
   }
   if(cur.t=="perf"&&cur.i==3&&cur.v.endsWith("ar")&&!I[cur.v])
     msg+="<br><small>In European Portuguese, the pretérito takes an accent (falámos) and the present does not (falamos).</small>";
@@ -338,6 +338,7 @@ function say(t){if(!AU||!VO)return;try{speechSynthesis.cancel();const u=new Spee
 $("#aud").onclick=()=>{if(!VO)return;AU=!AU;pv()};
 if(window.speechSynthesis)speechSynthesis.onvoiceschanged=pv;
 pv();
+const SH=(()=>{try{return /[?&]debug\b/.test(location.search)}catch(e){return false}})();
 let paused=false,pend=false,vOn=false,remMs=0,wasV=false,advT=0,quietUntil=0;
 function setMicBtn(on){$("#mic").textContent=on?"🎤 Listening… tap to stop":"🎤 Answer by voice"}
 function adv(){if(paused){pend=true;return}(lives<=0||asked>=Q)?end():next()}
@@ -345,7 +346,7 @@ function voiceStart(){
   if(!SR||vOn)return;
   if(document.featurePolicy&&!document.featurePolicy.allowsFeature("microphone")){$("#fb").textContent="The page that holds the game does not allow the microphone. To use voice, open the game file outside Claude. You can also type the answer.";return}
   rec=new SR();rec.lang="pt-PT";rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=8;
-  rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i],al=Array.from(r).map(x=>x.transcript);$("#heard").textContent="Heard: "+al[0];
+  rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i],al=Array.from(r).map(x=>x.transcript);$("#heard").textContent=SH?"Heard: "+al[0]:"";
     if(r.isFinal&&!locked&&!paused&&Date.now()>quietUntil&&!(window.speechSynthesis&&speechSynthesis.speaking)){inp.value=al[0];fin(al[0],al)}}};
   rec.onerror=e=>{const M={"not-allowed":"The microphone was blocked (permission denied, or blocked by the page that holds the game).","service-not-allowed":"The browser does not allow the speech service on this page.","audio-capture":"No microphone was found.","network":"No connection to the speech-recognition service.","language-not-supported":"This browser does not recognise European Portuguese."};
     if(M[e.error]){$("#fb").textContent=M[e.error]+" You can also type the answer.";vOn=false}};
@@ -371,6 +372,16 @@ $("#rv").onclick=()=>{$("#pt").innerHTML=tbl(cfg.t)};
 $("#fn").onclick=()=>{paused=false;pend=false;clearTimeout(tm);clearTimeout(advT);end()};
 $("#sx").onclick=()=>{paused=false;pend=false;clearTimeout(tm);clearTimeout(advT);menu()};
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&!$("#s1").classList.contains("h"))pause()});
+const pk=s=>sp(s.toLowerCase().replace(/ç/g,"s")).replace(/[\s-]/g,"").replace(/ch/g,"x").replace(/lh/g,"l").replace(/nh/g,"n").replace(/qu(?=[ei])/g,"k").replace(/gu(?=[ei])/g,"g").replace(/c(?=[ei])/g,"s").replace(/c/g,"k").replace(/z/g,"s").replace(/h/g,"").replace(/(.)\1+/g,"$1");
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++)m[i]=[i];for(let j=1;j<=b.length;j++)m[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function fz(h,c){
+  const T=["pres","imv","perf","imp","fut","cond","inf","cpres","cimp","cfut"];
+  if(T.some(t=>get(cur.v,t).some(f=>f&&vn(f)==vn(h))))return false;
+  const hk=pk(vp(h));if(!hk)return false;
+  const ck=pk(vp(c)),all=[...new Set(get(cur.v,cur.t).filter(Boolean).map(f=>pk(vp(f))))],d=lev(hk,ck);
+  if(d>Math.max(1,Math.floor(ck.length*.34)))return false;
+  return all.every(k=>k==ck||lev(hk,k)>d);
+}
 $("#go").onclick=()=>fin(inp.value);
 inp.addEventListener("keydown",e=>{if(e.key=="Enter")fin(inp.value)});
 "á à â ã é ê í ó ô õ ú ç".split(" ").forEach(c=>{
